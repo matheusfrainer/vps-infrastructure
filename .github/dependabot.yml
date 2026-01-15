@@ -1,0 +1,85 @@
+# ===========================================
+# Dependabot - Atualização Automática de Dependências
+# ===========================================
+# Cria PRs automaticamente quando há atualizações disponíveis
+# Docs: https://docs.github.com/en/code-security/dependabot
+
+version: 2
+updates:
+  # ─────────────────────────────────────────
+  # App IA (Frontend React)
+  # ─────────────────────────────────────────
+  - package-ecosystem: "npm"
+    directory: "/apps/app-ia"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Sao_Paulo"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "automated"
+    commit-message:
+      prefix: "deps(app-ia):"
+
+  # ─────────────────────────────────────────
+  # GitHub Actions
+  # ─────────────────────────────────────────
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "ci/cd"
+    commit-message:
+      prefix: "ci:"
+
+  # ─────────────────────────────────────────
+  # Docker (Supabase, Traefik, etc)
+  # ─────────────────────────────────────────
+  - package-ecosystem: "docker"
+    directory: "/modules/database/supabase"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "dependencies"
+      - "infrastructure"
+    commit-message:
+      prefix: "deps(supabase):"
+
+  - package-ecosystem: "docker"
+    directory: "/modules/gateway/traefik"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "dependencies"
+      - "infrastructure"
+    commit-message:
+      prefix: "deps(traefik):"
+
+  - package-ecosystem: "docker"
+    directory: "/modules/observability"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "dependencies"
+      - "infrastructure"
+    commit-message:
+      prefix: "deps(observability):"
+
+  # ─────────────────────────────────────────
+  # Git Submodules
+  # ─────────────────────────────────────────
+  - package-ecosystem: "gitsubmodule"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    labels:
+      - "dependencies"
+      - "submodules"
+    commit-message:
+      prefix: "deps(submodule):"

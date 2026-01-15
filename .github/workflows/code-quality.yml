@@ -1,0 +1,85 @@
+# ===========================================
+# Code Quality - Análise Automática
+# ===========================================
+# Roda em cada PR e push para main
+# Detecta: código morto, vulnerabilidades, linting
+# SECURITY: Este workflow não usa inputs não confiáveis
+
+name: Code Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ─────────────────────────────────────────
+  # Dead Code Detection (Knip)
+  # ─────────────────────────────────────────
+  dead-code:
+    name: "Dead Code Detection"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies (app-ia)
+        working-directory: apps/app-ia
+        run: npm ci --ignore-scripts
+
+      - name: Run Knip
+        working-directory: apps/app-ia
+        run: npx knip --reporter markdown >> "$GITHUB_STEP_SUMMARY"
+        continue-on-error: true
+
+  # ─────────────────────────────────────────
+  # Security Scan
+  # ─────────────────────────────────────────
+  security:
+    name: "Security Scan"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          format: "sarif"
+          output: "trivy-results.sarif"
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: "trivy-results.sarif"
+
+  # ─────────────────────────────────────────
+  # TODO/FIXME Finder
+  # ─────────────────────────────────────────
+  todo-finder:
+    name: "TODO FIXME Finder"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Find TODOs and FIXMEs
+        shell: bash
+        run: |
+          echo "## TODOs e FIXMEs encontrados" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          grep -rn "TODO\|FIXME\|HACK\|XXX" \
+            --include="*.ts" \
+            --include="*.tsx" \
+            --include="*.js" \
+            --include="*.py" \
+            --include="*.yml" \
+            --exclude-dir=node_modules \
+            --exclude-dir=vendor \
+            . >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || echo "Nenhum TODO/FIXME encontrado!" >> "$GITHUB_STEP_SUMMARY"

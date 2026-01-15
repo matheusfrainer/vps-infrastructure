@@ -1,0 +1,44 @@
+# CodeRabbit Configuration
+# Docs: https://docs.coderabbit.ai/configuration
+
+language: "pt-BR"
+
+reviews:
+  auto_review:
+    enabled: true
+    base_branches:
+      - main
+
+  # Ignorar diretórios que não precisam de review
+  path_filters:
+    - "!vendor/**"
+    - "!node_modules/**"
+    - "!*.lock"
+    - "!package-lock.json"
+
+  # Instruções específicas por caminho
+  path_instructions:
+    - path: "modules/gateway/**"
+      instructions: |
+        Foco em:
+        - Segurança de rotas e middlewares
+        - Configurações de TLS/SSL
+        - Rate limiting e proteção DDoS
+
+    - path: "modules/database/**"
+      instructions: |
+        Foco em:
+        - Segurança de conexões
+        - Configurações de backup
+        - Permissões e roles
+
+    - path: "apps/**"
+      instructions: |
+        Foco em:
+        - Performance e otimização
+        - Boas práticas React/TypeScript
+        - Acessibilidade
+        - Tratamento de erros
+
+chat:
+  auto_reply: true
