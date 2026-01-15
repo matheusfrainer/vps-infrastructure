@@ -3,7 +3,7 @@
 ## Passo a Passo
 
 ### 1. Acesse o GitHub Marketplace
-https://github.com/marketplace/coderabbit
+https://github.com/marketplace/coderabbitai
 
 ### 2. Clique em "Set up a plan"
 - Selecione "Free" para começar
