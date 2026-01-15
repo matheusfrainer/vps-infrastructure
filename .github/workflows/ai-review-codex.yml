@@ -2,7 +2,7 @@
 # OpenAI Codex - AI Review Automático
 # ===========================================
 # Docs: https://github.com/openai/codex-action
-# Requer: OPENAI_API_KEY nos secrets
+# Auth: Usa OAuth credentials de ~/.codex/auth.json
 # SECURITY: Este workflow não usa inputs não confiáveis
 
 name: Codex AI Review
@@ -24,11 +24,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup Codex Auth
+        run: |
+          mkdir -p ~/.codex
+          echo '${{ secrets.CODEX_AUTH_JSON }}' > ~/.codex/auth.json
+          chmod 600 ~/.codex/auth.json
+
       - name: Codex Code Review
         uses: openai/codex-action@v1
         with:
-          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
-          task: review
+          sandbox: read-only
           prompt: |
             Review this PR for code quality issues.
             Focus on bugs, security vulnerabilities, performance issues.

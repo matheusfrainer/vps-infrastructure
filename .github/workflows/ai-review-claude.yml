@@ -2,7 +2,8 @@
 # Claude Code - AI Review Automático
 # ===========================================
 # Docs: https://github.com/anthropics/claude-code-action
-# Requer: ANTHROPIC_API_KEY nos secrets
+# Auth: Suporta OAuth (CLAUDE_CODE_OAUTH_TOKEN) ou API key (ANTHROPIC_API_KEY)
+# Para gerar OAuth token: rode 'claude setup-token' no terminal
 # SECURITY: Não usa inputs não confiáveis em comandos run
 
 name: Claude AI Review
@@ -36,6 +37,8 @@ jobs:
       - name: Claude Code Action
         uses: anthropics/claude-code-action@v1
         with:
+          # Usa OAuth token se disponível, senão usa API key
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: |
             Analise este PR em portugues brasileiro.
