@@ -181,3 +181,4 @@ export ANTHROPIC_API_KEY="sk-ant-..."
 ```
 
 Ou usar um gerenciador de secrets como `direnv` ou `1password-cli`.
+
