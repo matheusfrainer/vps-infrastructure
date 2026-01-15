@@ -1,0 +1,48 @@
+# ===========================================
+# GitHub Copilot Coding Agent - Setup Steps
+# ===========================================
+# Docs: https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment
+# Este workflow configura o ambiente para o Copilot Coding Agent
+# O Coding Agent cria PRs automaticamente a partir de issues
+# Requer: Copilot Pro+, Business ou Enterprise
+# SECURITY: Este workflow não usa inputs não confiáveis
+
+name: Copilot Setup Steps
+
+on: workflow_dispatch
+
+jobs:
+  # O nome do job DEVE ser "copilot-setup-steps" para ser reconhecido
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Setup Node.js para apps frontend
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'apps/*/package-lock.json'
+
+      # Instalar dependências do app-ia (se existir package-lock.json)
+      - name: Install app-ia dependencies
+        working-directory: apps/app-ia
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          fi
+
+      # Verificar Docker Compose files
+      - name: Validate Docker Compose
+        run: |
+          for f in modules/*/docker-compose.yml modules/*/docker-compose.*.yml; do
+            if [ -f "$f" ]; then
+              echo "Validating $f"
+              docker compose -f "$f" config --quiet || echo "Warning: $f may have issues"
+            fi
+          done
