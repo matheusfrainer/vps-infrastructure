@@ -3,6 +3,7 @@
 # ===========================================
 # Docs: https://github.com/openai/codex-action
 # Requer: OPENAI_API_KEY de platform.openai.com (pago por uso)
+# NOTA: Este workflow só roda se OPENAI_API_KEY estiver configurada
 # SECURITY: Este workflow não usa inputs não confiáveis
 
 name: Codex AI Review
@@ -14,9 +15,12 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  id-token: write
 
 jobs:
   codex-review:
+    # Só roda se OPENAI_API_KEY estiver configurada
+    if: ${{ secrets.OPENAI_API_KEY != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
