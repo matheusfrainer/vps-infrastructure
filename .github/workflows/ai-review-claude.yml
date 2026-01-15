@@ -1,0 +1,46 @@
+# ===========================================
+# Claude Code - AI Review Automático
+# ===========================================
+# Docs: https://github.com/anthropics/claude-code-action
+# Requer: ANTHROPIC_API_KEY nos secrets
+# SECURITY: Não usa inputs não confiáveis em comandos run
+
+name: Claude AI Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  issue_comment:
+    types: [created]
+
+# Permissões necessárias para comentar em PRs
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  claude-review:
+    # Roda em PRs ou quando mencionam @claude em comentários
+    # Nota: contains() em 'if' é seguro, não é executado em shell
+    if: |
+      github.event_name == 'pull_request' ||
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Claude Code Action
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Analise este PR em portugues brasileiro.
+            Verifique seguranca, performance, boas praticas e bugs potenciais.
+            Responda com: Resumo, Pontos de Atencao, Sugestoes.
+          claude_args: |
+            --model claude-sonnet-4-20250514
+            --max-turns 3

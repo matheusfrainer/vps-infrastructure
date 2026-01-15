@@ -165,6 +165,76 @@ aider apps/app-ia/src/main.tsx
 
 ---
 
+## 5. GitHub Actions - AI Review Automático
+
+**O que é:** Workflows que rodam Claude, Codex e Gemini automaticamente em cada PR.
+
+### Como Funciona
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                   FLUXO DE AI REVIEW                          │
+├──────────────────────────────────────────────────────────────┤
+│                                                               │
+│  PR Criado/Atualizado                                         │
+│        │                                                      │
+│        ▼                                                      │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐           │
+│  │   Claude    │  │   Codex     │  │   Gemini    │           │
+│  │   Review    │  │   Review    │  │   Review    │           │
+│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘           │
+│         │                │                │                   │
+│         └────────────────┼────────────────┘                   │
+│                          ▼                                    │
+│                   Comentários no PR                           │
+│                                                               │
+└──────────────────────────────────────────────────────────────┘
+```
+
+### Workflows Configurados
+
+| Workflow | Trigger | Interação |
+|----------|---------|-----------|
+| `ai-review-claude.yml` | PR + `@claude` em comentários | Responde menções |
+| `ai-review-codex.yml` | Apenas PRs | Automático |
+| `ai-review-gemini.yml` | PR + `@gemini` em comentários | Responde menções |
+
+### Configurar Secrets no GitHub
+
+1. Acesse: **Settings → Secrets and variables → Actions**
+2. Clique **New repository secret**
+3. Adicione cada secret:
+
+| Secret | Onde obter |
+|--------|-----------|
+| `ANTHROPIC_API_KEY` | [console.anthropic.com](https://console.anthropic.com) |
+| `OPENAI_API_KEY` | [platform.openai.com](https://platform.openai.com) |
+| `GOOGLE_API_KEY` | [console.cloud.google.com](https://console.cloud.google.com) |
+
+### Interagindo com os Bots
+
+Nos comentários de PRs, você pode:
+
+```markdown
+@claude Explique o que esta função faz
+
+@gemini Sugira melhorias de performance
+
+@coderabbitai review   # CodeRabbit (se instalado)
+```
+
+### Custos Estimados (GitHub Pro - 3.000 min/mês)
+
+| Workflow | Tempo médio | Custo API |
+|----------|-------------|-----------|
+| Claude Review | ~2 min | ~$0.03-0.10/PR |
+| Codex Review | ~1 min | ~$0.02-0.05/PR |
+| Gemini Review | ~2 min | Grátis (tier free) |
+
+> **Nota:** Com 3.000 minutos/mês, você pode fazer ~500+ PRs com AI review completo.
+
+---
+
 ## API Keys Necessárias
 
 | Serviço | Onde obter | Variável de ambiente |
