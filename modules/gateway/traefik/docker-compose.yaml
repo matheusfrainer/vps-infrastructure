@@ -1,0 +1,35 @@
+services:
+  traefik:
+    image: traefik:v3.6
+    container_name: traefik
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./dynamic:/etc/traefik/dynamic:ro
+      - ./letsencrypt:/letsencrypt
+      - traefik-logs:/var/log/traefik
+    networks:
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      # Dashboard com HTTPS e autenticação
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.nodusai.com.br`)"
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.middlewares=auth@file"
+    environment:
+      - TZ=America/Sao_Paulo
+
+volumes:
+  traefik-logs:
+
+networks:
+  traefik-public:
+    external: true

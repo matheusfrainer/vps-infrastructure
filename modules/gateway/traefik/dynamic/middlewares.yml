@@ -1,0 +1,58 @@
+# Dynamic Configuration - Middlewares de Segurança
+# Domínio: nodusai.com.br
+
+http:
+  middlewares:
+    # Headers de segurança
+    security-headers:
+      headers:
+        browserXssFilter: true
+        contentTypeNosniff: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 31536000
+        customFrameOptionsValue: "SAMEORIGIN"
+        referrerPolicy: "strict-origin-when-cross-origin"
+        customResponseHeaders:
+          X-Content-Type-Options: "nosniff"
+          X-Frame-Options: "SAMEORIGIN"
+          X-XSS-Protection: "1; mode=block"
+
+    # Rate limiting
+    rate-limit:
+      rateLimit:
+        average: 100
+        burst: 50
+        period: 1s
+
+    # Autenticação básica para dashboard
+    # Senha gerada: echo $(htpasswd -nb admin SUASENHA) | sed -e s/\\$/\\$\\$/g
+    # IMPORTANTE: Altere a senha abaixo
+    auth:
+      basicAuth:
+        users:
+          - "admin:$$apr1$$ruca84Hq$$mbjdMZBAG.KWn7vfN/SNK/"
+
+    # Compressão
+    compress:
+      compress: {}
+
+    # CORS para APIs
+    cors-headers:
+      headers:
+        accessControlAllowMethods:
+          - GET
+          - OPTIONS
+          - PUT
+          - POST
+          - DELETE
+          - PATCH
+        accessControlAllowHeaders:
+          - "*"
+        accessControlAllowOriginList:
+          - "https://nodusai.com.br"
+          - "https://studio.nodusai.com.br"
+          - "https://api.nodusai.com.br"
+        accessControlMaxAge: 100
+        addVaryHeader: true

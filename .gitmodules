@@ -1,0 +1,9 @@
+[submodule "vendor/supabase-official"]
+	path = vendor/supabase-official
+	url = https://github.com/supabase/supabase.git
+[submodule "apps/shadcn-admin"]
+	path = apps/shadcn-admin
+	url = https://github.com/satnaing/shadcn-admin.git
+[submodule "modules/ai/agent-demos"]
+	path = modules/ai/agent-demos
+	url = https://github.com/anthropics/claude-agent-sdk-demos.git

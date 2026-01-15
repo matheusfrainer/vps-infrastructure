@@ -1,0 +1,99 @@
+storage:
+  type: memory
+
+ui:
+  title: "Nodus AI - Status"
+  description: "Status em tempo real dos serviços"
+  header: "Monitoramento de Infraestrutura"
+
+alerting:
+  # Configurar notificações aqui quando necessário
+  # discord:
+  #   webhook-url: "https://discord.com/api/webhooks/..."
+
+endpoints:
+  # === APLICAÇÕES PRINCIPAIS ===
+  - name: "Website Principal"
+    group: "Aplicações"
+    url: "https://nodusai.com.br"
+    interval: 30s
+    conditions:
+      - "[STATUS] == 200"
+      - "[RESPONSE_TIME] < 3000"
+    alerts:
+      - type: discord
+        enabled: false
+        description: "Website principal está fora do ar"
+
+  - name: "API Supabase"
+    group: "Aplicações"
+    url: "https://api.nodusai.com.br/rest/v1/"
+    interval: 30s
+    conditions:
+      - "[STATUS] == 200"
+      - "[RESPONSE_TIME] < 1000"
+    alerts:
+      - type: discord
+        enabled: false
+        description: "API Supabase está lenta ou fora do ar"
+
+  - name: "Studio Supabase"
+    group: "Aplicações"
+    url: "https://studio.nodusai.com.br"
+    interval: 60s
+    conditions:
+      - "[STATUS] == 200"
+
+  # === DOMÍNIOS ===
+  - name: "nodus-ai.cloud"
+    group: "Domínios"
+    url: "https://nodus-ai.cloud"
+    interval: 60s
+    conditions:
+      - "[STATUS] == 200"
+      - "[RESPONSE_TIME] < 5000"
+
+  - name: "be-bentinho.com.br"
+    group: "Domínios"
+    url: "https://be-bentinho.com.br"
+    interval: 60s
+    conditions:
+      - "[STATUS] == 200"
+      - "[RESPONSE_TIME] < 5000"
+
+  - name: "mynodus-mhft.com.br"
+    group: "Domínios"
+    url: "https://mynodus-mhft.com.br"
+    interval: 60s
+    conditions:
+      - "[STATUS] == 200"
+      - "[RESPONSE_TIME] < 5000"
+
+  # === CERTIFICADOS SSL ===
+  - name: "SSL - nodusai.com.br"
+    group: "Certificados SSL"
+    url: "https://nodusai.com.br"
+    interval: 1h
+    conditions:
+      - "[STATUS] == 200"
+      - "[CERTIFICATE_EXPIRATION] > 72h"
+    alerts:
+      - type: discord
+        enabled: false
+        description: "Certificado SSL expirando em menos de 72 horas!"
+
+  - name: "SSL - api.nodusai.com.br"
+    group: "Certificados SSL"
+    url: "https://api.nodusai.com.br"
+    interval: 1h
+    conditions:
+      - "[STATUS] == 200"
+      - "[CERTIFICATE_EXPIRATION] > 72h"
+
+  # === MONITORAMENTO INTERNO ===
+  - name: "Netdata Dashboard"
+    group: "Monitoramento"
+    url: "https://monitor.nodusai.com.br"
+    interval: 60s
+    conditions:
+      - "[STATUS] == 200"

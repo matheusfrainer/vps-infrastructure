@@ -1,0 +1,127 @@
+# ============================================
+# .gitignore - Proteção de Segurança para VPS
+# ============================================
+
+# ==========================================
+# 🔴 ARQUIVOS CRÍTICOS - NUNCA COMMITAR
+# ==========================================
+
+# Variáveis de ambiente (senhas, tokens, API keys)
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+
+# Certificados SSL/TLS e chaves privadas
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.jks
+acme.json
+acme.json.bak
+letsencrypt/
+
+# Credenciais e secrets
+*secret*
+*credential*
+*password*
+!*password*.tsx
+!*password*.ts
+!*password*.js
+*.secrets
+
+# ==========================================
+# 🟠 DADOS E VOLUMES - NÃO VERSIONAR
+# ==========================================
+
+# Volumes de banco de dados
+volumes/db/
+volumes/storage/
+**/data/
+**/pgdata/
+
+# Logs (podem conter informações sensíveis)
+*.log
+logs/
+**/logs/
+
+# ==========================================
+# 🟡 DEPENDÊNCIAS - REGENERÁVEIS
+# ==========================================
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+.venv/
+ENV/
+env/
+*.egg-info/
+.eggs/
+
+# ==========================================
+# 🔵 IDE E SISTEMA
+# ==========================================
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Build outputs
+dist/
+build/
+*.min.js
+*.min.css
+
+# Cache
+.cache/
+*.cache
+.turbo/
+
+# ==========================================
+# 📁 ESPECÍFICOS DESTE PROJETO
+# ==========================================
+
+# Traefik - certificados Let's Encrypt
+modules/gateway/traefik/letsencrypt/
+
+# Supabase - dados persistentes
+modules/database/supabase/volumes/db/
+modules/database/supabase/volumes/storage/
+
+# Control Center - dados locais
+modules/control-center/app/data/
+
+# ==========================================
+# ✅ EXCEÇÕES - ARQUIVOS QUE DEVEM SER COMMITADOS
+# ==========================================
+
+# Exemplos de configuração (sem dados reais)
+!**/.env.example
+!**/.env.sample
+!**/example.env
+
+# Documentação
+!**/README.md
+!**/CHANGELOG.md
+
+# Docker compose (estrutura, não dados)
+!**/docker-compose*.yml
+!**/Dockerfile*
